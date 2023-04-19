@@ -13,3 +13,5 @@ Content\Chess
 *.suo
 *.xcodeproj
 *.xcworkspace
+*.uproject
+Content\PuzzleBP\Maps\GameMap.umap
