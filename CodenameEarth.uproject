@@ -4,13 +4,5 @@
 	"Category": "",
 	"Description": "",
 	"Modules": [
-		{
-			"Name": "CodenameEarth",
-			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"AdditionalDependencies": [
-				"Engine"
-			]
-		}
 	]
 }
