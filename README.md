@@ -5,7 +5,7 @@ A chess variant created using Unreal Engine 4.27
 ## How to play
 
 When the game is launched, the player pieces (in white colour) are placed out of the board. The player may click each piece and change to a variant.\
-The player may play with default chess pieces with Play Default Chess button or with customized pieces with Play Customized buttons.
+The player may play with default chess pieces with Play Default Chess button or with customized pieces with Play Customized button.
 
 ## AI used
 
