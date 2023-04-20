@@ -1,52 +1,16 @@
-
-		- EarthGameState
-		
-1. Base Piece list representation is no longer separated to AI and Player, it is now handled by combined 'PiecesList', indexing should be done to this array.
-    * AIPieces and PlayerPieces array is updated based on what is present on PiecesList. Please do not change them directly.
-	
-2. Location where piece is present is now separately tracked in Boolean Array. Which should be updated based on GameBoard.
-
-		- Individual Pieces
-
-1. Instead of AI and Player having different piece representation, both of them now inherits from single base class. Determination of being player piece or opponent piece is done by boolean variable.
-	* Texture change according to ownership has not been implemented.
-	
-2. Piece location is now tracked on X,Y coordinate basis.
-	* This was due to implementation detail on movement generation.
-	
-3. Status List is added. (Currently unused)
-
-4. All move related data has been combined into MoveList array. Including active skill.
-	* Everything may have broke due to lack of AllowedTile array, which was deleted to place it elsewhere, but forgot to implement replacement.
+- Discarded most of the code being worked from base of Origin/Testing, rebasing to Origin/Testing4_NoStruct
 
 
-		- Move (MobilityInfo)
-		
-1. Now MobilityInfo is tuple of (Condition, Distance, ModifierType, MoveType, Range, Chain, Repeats, Effects).
-	* Condition consist of {None,i,c,o,h,t,l}
-		None: None, move can occur any point in the game.
-		i: Opening only, It can only be made as first move of given piece. (Like Pawn's Opener)
-		c: Capture only, It can only be made when it can capture another piece. (Like Pawn's Diagonal Capture)
-		o: Move only, It cannot be used if there is piece on its way. (Like Pawn's forward movement)
-		h: Hopping only, Move require passing through exactly one enemy piece on the way to the destination. (Not implemented)
-		t: Tagging only, Move require passing through exactly one of your piece on the way to the destination. (Not implemented)
-		l: Leaping, Can move regardless if piece is blocking the path or not. (Similar to Knight)
-		
-	* Distance is single number where this piece will move directly.
-	* Modifier is (None,>,<)
-		None: Placed for movetype that can't be modified.
-		>: Forward, moves forward toward opposite side of the board.
-		<: Backward, moves toward your side of the board.
-	* MoveType is (None,*,+,X,=,Chained)
-		None: Piece can pass the turn without moving.
-		*: All direction, Alias for +>, +<, X>, X<, =. Ignores modifier.
-		+: Vertical, must have forward or backward modifier.
-		X: Diagonal, must have forward or backward modifier.
-		=: Sideway or horizontal, Ignore modifiers.
-		Chained: Ignore initially given move, then go iteratively through MobilityRepeat element to generate move.
-				 This was added to represent move like Knight, which can be represented as chain of two orthagonal then one sideway.
-	* Range is given as piece's range of movement from distance, so piece moves (distance, distance+range)
-	* Chain is only checked if MoveType is chain. (Not implemented)
-	* Repeat generates x repeat of above move, which simulate situation where given piece is allowed to take move x times.
-	* Effect: Is used to trigger special effect at end of move.
+		- AI
 
+1. Added 'CopyDanger' boolean array.		
+2. Added UpdateDangerMap function, which updates CopyDanger for purpose of DT based filtering. Should be fast.
+3. Added DTFilter function. It checks if given transition violates one of the following rule
+	1. Piece would move backward (toward controlling player)
+	2. Unknown condition involving Last X/Y of piece and current X/Y, copied from Decision Tree implementation.
+	3. High value piece (Piece cost > 1) can be captured by opponent after moving. (Detected by CopyDanger)
+4. Modified 'Unroll Unexplored Node' function adding DTFilter.
+5. Modified 'Update NPC' function adding UpdateDangerMap.
+6. Get Move has temporary string output printing how many potential move AI is considering (To compare filtering behaviour)
+
+Filtering is expected to reduce search space, making it more predictable and smarter. (In shallow search)
